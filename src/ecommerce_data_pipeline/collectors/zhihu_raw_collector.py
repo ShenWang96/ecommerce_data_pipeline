@@ -1,8 +1,8 @@
 """
 知乎 RawCollector — 原始数据落地。
 
-无登录: /explore 发现页 — 保存问题标题+回答数+链接
-有 Cookie: /api/v3/feed/topstory/hot-lists/total 热榜 JSON — 完整 API 响应
+/hot 热榜页 — HTML 解析，提取问题标题+热度+回答数+链接 (需 Cookie)
+/api/v3/feed/topstory/hot-lists/total 热榜 JSON — 完整 API 响应 (需 Cookie)
 """
 import re
 import logging
@@ -36,31 +36,50 @@ class ZhihuRawCollector:
             h["Cookie"] = "; ".join(f"{c['name']}={c['value']}" for c in self.cookies)
         return httpx.Client(headers=h, timeout=self.timeout, follow_redirects=True)
 
-    def collect_explore(self) -> list[RawRecord]:
-        """发现页 — HTML 中提取问题链接+回答数"""
+    def collect_hot_list(self) -> list[RawRecord]:
+        """热榜页 https://www.zhihu.com/hot — HTML 解析"""
         records = []
         try:
             with self._client() as c:
-                r = c.get("https://www.zhihu.com/explore")
+                r = c.get("https://www.zhihu.com/hot")
             if r.status_code != 200: return records
             soup = BeautifulSoup(r.text, "lxml")
 
-            for a in soup.select('a[href*="/question/"]'):
-                title = a.get_text(strip=True)
-                href = a.get("href", "")
-                if not title or len(title) < 8 or title.startswith("http"):
+            # 匹配热榜条目: .HotList-item 或 [class*=HotItem]
+            items = soup.select(".HotList-item, [class*=HotItem]")
+            if not items:
+                # 回退: 直接从页面提取所有问题链接
+                items = soup.select('a[href*="/question/"]')
+
+            seen = set()
+            for item in items:
+                # 提取链接和标题
+                link = item.select_one('a[href*="/question/"]')
+                if not link:
                     continue
+                title = link.get_text(strip=True)
+                href = link.get("href", "")
+                if not title or len(title) < 6 or title.startswith("http"):
+                    continue
+                if title in seen:
+                    continue
+                seen.add(title)
+
                 url = f"https://www.zhihu.com{href}" if href.startswith("/") else href
                 qid = url.split("/")[-1] if "/question/" in url else ""
 
+                # 尝试提取热度指标
+                item_text = item.get_text()
+                heat_metric = ""
+                heat_m = re.search(r"(\d[\d,.]*\s*万?\s*热度)", item_text)
+                if heat_m:
+                    heat_metric = heat_m.group(1)
+
                 # 尝试提取回答数
                 answer_count = 0
-                parent = a.parent
-                for _ in range(3):
-                    if parent:
-                        m = re.search(r"(\d[\d,]*)\s*(?:个回答|回答)", parent.get_text())
-                        if m: answer_count = int(m.group(1).replace(",", "")); break
-                        parent = parent.parent
+                answer_m = re.search(r"(\d[\d,]*)\s*(?:个回答|回答)", item_text)
+                if answer_m:
+                    answer_count = int(answer_m.group(1).replace(",", ""))
 
                 records.append(make_raw(
                     source="zhihu",
@@ -68,13 +87,16 @@ class ZhihuRawCollector:
                     item_id=qid,
                     url=url,
                     title=title,
-                    body=title,
+                    body=heat_metric,
                     comments_count=answer_count,
-                    html_snapshot="",  # 可选: 保存完整 HTML (太大)
-                    extra={"answer_count": answer_count},
+                    html_snapshot="",
+                    extra={
+                        "answer_count": answer_count,
+                        "heat_metric": heat_metric,
+                    },
                 ))
         except Exception as e:
-            logger.warning(f"explore error: {e}")
+            logger.warning(f"hot_list error: {e}")
         return records
 
     def collect_hot_api(self) -> list[RawRecord]:
@@ -107,7 +129,7 @@ class ZhihuRawCollector:
         return records
 
     def collect_all(self) -> list[RawRecord]:
-        records = self.collect_explore()
+        records = self.collect_hot_list()
         if self.cookies:
             records.extend(self.collect_hot_api())
         return records

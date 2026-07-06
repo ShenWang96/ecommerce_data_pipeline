@@ -1,8 +1,8 @@
 """
 知乎 Collector — Layer 1 需求萌芽信号。
 
-无登录: /explore 发现页 (热点问题标题+回答数)
-有 Cookie: /api/v3/feed/topstory/hot-lists/total 热榜 JSON API
+/hot 热榜页 — HTML 解析，提取问题标题+热度+回答数 (需 Cookie)
+/api/v3/feed/topstory/hot-lists/total 热榜 JSON — 完整 API 响应 (需 Cookie)
 """
 import re
 import time
@@ -39,44 +39,63 @@ class ZhihuCollector:
             h["Cookie"] = "; ".join(f"{c['name']}={c['value']}" for c in self.cookies)
         return httpx.Client(headers=h, timeout=self.timeout, follow_redirects=True)
 
-    def collect_explore(self) -> list[TrendSignal]:
-        """Layer 1: 发现页热点问题 — 无需登录"""
+    def collect_hot_list(self) -> list[TrendSignal]:
+        """Layer 1: 热榜页 https://www.zhihu.com/hot — HTML 解析"""
         signals = []
         try:
             with self._client() as c:
-                r = c.get("https://www.zhihu.com/explore")
+                r = c.get("https://www.zhihu.com/hot")
             if r.status_code != 200: return signals
             soup = BeautifulSoup(r.text, "lxml")
+
+            # 匹配热榜条目: .HotList-item 或 [class*=HotItem]
+            items = soup.select(".HotList-item, [class*=HotItem]")
+            if not items:
+                # 回退: 直接从页面提取所有问题链接
+                items = soup.select('a[href*="/question/"]')
+
             seen = set()
-            for a in soup.select('a[href*="/question/"]'):
-                title = a.get_text(strip=True)
-                href = a.get("href", "")
-                if not title or len(title) < 8 or title.startswith("http") or title in seen:
+            for item in items:
+                link = item.select_one('a[href*="/question/"]')
+                if not link:
+                    continue
+                title = link.get_text(strip=True)
+                href = link.get("href", "")
+                if not title or len(title) < 6 or title.startswith("http") or title in seen:
                     continue
                 seen.add(title)
-                url = f"https://www.zhihu.com{href}" if href.startswith("/") else href
-                answer_count = 0
-                parent = a.parent
-                for _ in range(3):
-                    if parent:
-                        m = re.search(r"(\d[\d,]*)\s*(?:个回答|回答)", parent.get_text())
-                        if m: answer_count = int(m.group(1).replace(",", "")); break
-                        parent = parent.parent
 
-                stype = classify_signal_type(title, "", "zhihu", "")
+                url = f"https://www.zhihu.com{href}" if href.startswith("/") else href
+
+                item_text = item.get_text()
+                # 尝试提取热度指标
+                heat_metric = ""
+                heat_m = re.search(r"(\d[\d,.]*\s*万?\s*热度)", item_text)
+                if heat_m:
+                    heat_metric = heat_m.group(1)
+                # 尝试提取回答数
+                answer_count = 0
+                answer_m = re.search(r"(\d[\d,]*)\s*(?:个回答|回答)", item_text)
+                if answer_m:
+                    answer_count = int(answer_m.group(1).replace(",", ""))
+
+                stype = classify_signal_type(title, heat_metric, "zhihu", "")
                 signals.append(make_signal(
                     source="zhihu",
                     signal_type=stype,
                     title=title,
-                    content=title,
+                    content=heat_metric,
                     url=url,
-                    domain=classify_domain(title, ""),
-                    keywords=extract_keywords(title, ""),
+                    domain=classify_domain(title, heat_metric),
+                    keywords=extract_keywords(title, heat_metric),
                     comments=answer_count,
-                    raw_stats={"answer_count": answer_count},
+                    raw_stats={
+                        "answer_count": answer_count,
+                        "heat_metric": heat_metric,
+                    },
                 ))
         except Exception as e:
-            logger.warning(f"explore error: {e}")
+            logger.warning(f"hot_list error: {e}")
         return signals
 
     def collect_hot_api(self) -> list[TrendSignal]:
@@ -109,7 +128,7 @@ class ZhihuCollector:
         return signals
 
     def collect_all(self) -> list[TrendSignal]:
-        signals = self.collect_explore()
+        signals = self.collect_hot_list()
         if self.cookies:
             time.sleep(self.delay)
             signals.extend(self.collect_hot_api())
