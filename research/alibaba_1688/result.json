@@ -1,0 +1,21 @@
+{
+  "source": "1688 / Alibaba",
+  "status": "see_findings",
+  "findings": [
+    "1688 search URL: https://s.1688.com/selloffer/offer_search.htm?keywords=%C0%B6%D1%C0%D2%F4%CF%E4",
+    "Status: 200, Content-Length: 4818",
+    "Page title: no title",
+    "WARNING: Login wall detected!",
+    "No product cards found with known selectors — checking raw content...",
+    "  First lines: ",
+    "\nAlibaba.com URL: https://www.alibaba.com/trade/search?SearchText=bluetooth+speaker",
+    "Status: 200, Content-Length: 89630",
+    "Page title: no title",
+    "WARNING: Captcha detected!",
+    "No products found — checking raw content snippet...",
+    "  First lines: ",
+    "\n1688 API endpoint: https://h5api.m.1688.com/h5/mtop.1688.offer.search/1.0/?jsv=2.4.0...",
+    "Status: 200",
+    "Response: {\"api\":\"\",\"v\":\"\",\"ret\":[\"FAIL_SYS_API_NOT_FOUNDED::请求API不存在\"],\"data\":{}}"
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "source": "Amazon JP",
+  "status": "ok",
+  "findings": [
+    "Navigating to: https://www.amazon.co.jp/s?k=bluetooth+speaker",
+    "Page title: Amazon.co.jp : bluetooth speaker",
+    "Found 48 products",
+    "[B0C3Q65R9P] ソニー(SONY) ワイヤレススピーカー SRS-XB100:クリアな と重低音再生/防水・防塵対応 IP67/ロングバッテリー内蔵 約16時間/ハンズフリー通話対応/ステレオペア機能搭載/USB T | ¥47.58 | 5つ星のうち4.4",
+    "[B0CZRLRGM5] Xiaomi サウンドポケット Bluetoothスピーカー ポータブルスピーカー IP67防塵防水 完全ワイヤレス ステレオサウンド Bluetooth 5.4 音声通話 アウトドア, ブラック | ¥11.56 | 5つ星のうち4.2",
+    "[B0GR1Q2ZWZ] Xiaomi Bluetooth スピーカー Essential ポータブルスピーカー IP66防塵防水 完全ワイヤレス ステレオサウンド Bluetooth 6.0 音声通話 アウトドア グリーン | ¥10.50 | 5つ星のうち4.0",
+    "[B0CZRP1KFG] Xiaomi サウンドアウトドア Bluetoothスピーカー ワイヤレススピーカー 30W IP67防塵防水 完全ワイヤレス ステレオサウンド対応 Bluetooth 5.4対応 マイク内蔵 アウト | ¥26.47 | 5つ星のうち4.5",
+    "[B0G78P5736] Earaku(イアラク) Bluetooth スピーカー Sora5 31時間連続再生 【高音・低音のバランス・臨場感溢れる3Dサラウンド】 ワイヤレススピーカー TWS機能 Bluetooth5.4 | ¥12.56 | 5つ星のうち4.5",
+    "Screenshot: amazon_jp_search.png"
+  ],
+  "products": [
+    {
+      "asin": "B0C3Q65R9P",
+      "title": "ソニー(SONY) ワイヤレススピーカー SRS-XB100:クリアな と重低音再生/防水・防塵対応 IP67/ロングバッテリー内蔵 約16時間/ハンズフリー通話対応/ステレオペア機能搭載/USB T",
+      "price_jpy": "¥47.58",
+      "rating": "5つ星のうち4.4"
+    },
+    {
+      "asin": "B0CZRLRGM5",
+      "title": "Xiaomi サウンドポケット Bluetoothスピーカー ポータブルスピーカー IP67防塵防水 完全ワイヤレス ステレオサウンド Bluetooth 5.4 音声通話 アウトドア, ブラック",
+      "price_jpy": "¥11.56",
+      "rating": "5つ星のうち4.2"
+    },
+    {
+      "asin": "B0GR1Q2ZWZ",
+      "title": "Xiaomi Bluetooth スピーカー Essential ポータブルスピーカー IP66防塵防水 完全ワイヤレス ステレオサウンド Bluetooth 6.0 音声通話 アウトドア グリーン",
+      "price_jpy": "¥10.50",
+      "rating": "5つ星のうち4.0"
+    },
+    {
+      "asin": "B0CZRP1KFG",
+      "title": "Xiaomi サウンドアウトドア Bluetoothスピーカー ワイヤレススピーカー 30W IP67防塵防水 完全ワイヤレス ステレオサウンド対応 Bluetooth 5.4対応 マイク内蔵 アウト",
+      "price_jpy": "¥26.47",
+      "rating": "5つ星のうち4.5"
+    },
+    {
+      "asin": "B0G78P5736",
+      "title": "Earaku(イアラク) Bluetooth スピーカー Sora5 31時間連続再生 【高音・低音のバランス・臨場感溢れる3Dサラウンド】 ワイヤレススピーカー TWS機能 Bluetooth5.4",
+      "price_jpy": "¥12.56",
+      "rating": "5つ星のうち4.5"
+    }
+  ]
+}

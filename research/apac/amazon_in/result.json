@@ -1,0 +1,47 @@
+{
+  "source": "Amazon IN",
+  "status": "ok",
+  "findings": [
+    "Navigating to: https://www.amazon.in/s?k=bluetooth+speaker",
+    "Page title: Amazon.in : bluetooth speaker",
+    "Found 16 products",
+    "[B0FHHQQNZY] Dubstep Pop 1400 Portable Bluetooth Speaker | 14W Loud Sound, Deep Bass with XBASS, 16 Hrs Playtime, | ₹649 | 4.3 out of 5 stars",
+    "[B0DJ3FFC8R] ZEBRONICS Astra 35, Portable Bluetooth Speaker, 16 Watts, Upto 8h Backup, Dual Drivers + Dual Passiv | ₹699 | 4.0 out of 5 stars",
+    "[B0CH3G9VR2] Boat Aavante Bar 490 10W Signature Sound, Dual Full-Range Drivers,7 HRS Battery, Built-in Mic,2.0 CH | ₹799 | 4.1 out of 5 stars",
+    "[B0D6W7F7WH] Boat Stone 352 Pro/Stone 358 Pro w/ 14W Signature Sound, Up to 12 Hours Playback, RGB LEDs, TWS Feat | ₹1,499 | 4.2 out of 5 stars",
+    "[B0GMDNKHP5] HAMMER Drop X1 5W Bluetooth Speaker with Twin Pairing, Bluetooth v6.0, 32 Hours Playtime, 52mm Drive | ₹549 | 4.3 out of 5 stars",
+    "Screenshot: amazon_in_search.png"
+  ],
+  "products": [
+    {
+      "asin": "B0FHHQQNZY",
+      "title": "Dubstep Pop 1400 Portable Bluetooth Speaker | 14W Loud Sound, Deep Bass with XBASS, 16 Hrs Playtime,",
+      "price_inr": "₹649",
+      "rating": "4.3 out of 5 stars"
+    },
+    {
+      "asin": "B0DJ3FFC8R",
+      "title": "ZEBRONICS Astra 35, Portable Bluetooth Speaker, 16 Watts, Upto 8h Backup, Dual Drivers + Dual Passiv",
+      "price_inr": "₹699",
+      "rating": "4.0 out of 5 stars"
+    },
+    {
+      "asin": "B0CH3G9VR2",
+      "title": "Boat Aavante Bar 490 10W Signature Sound, Dual Full-Range Drivers,7 HRS Battery, Built-in Mic,2.0 CH",
+      "price_inr": "₹799",
+      "rating": "4.1 out of 5 stars"
+    },
+    {
+      "asin": "B0D6W7F7WH",
+      "title": "Boat Stone 352 Pro/Stone 358 Pro w/ 14W Signature Sound, Up to 12 Hours Playback, RGB LEDs, TWS Feat",
+      "price_inr": "₹1,499",
+      "rating": "4.2 out of 5 stars"
+    },
+    {
+      "asin": "B0GMDNKHP5",
+      "title": "HAMMER Drop X1 5W Bluetooth Speaker with Twin Pairing, Bluetooth v6.0, 32 Hours Playtime, 52mm Drive",
+      "price_inr": "₹549",
+      "rating": "4.3 out of 5 stars"
+    }
+  ]
+}

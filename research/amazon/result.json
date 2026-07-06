@@ -1,0 +1,21 @@
+{
+  "source": "Amazon (Playwright)",
+  "status": "see_findings",
+  "findings": [
+    "Launching Chromium via Playwright...",
+    "Navigating to: https://www.amazon.com/s?k=bluetooth+speaker",
+    "Final URL: https://www.amazon.com/s?k=bluetooth+speaker",
+    "Page title: Amazon.com : bluetooth speaker",
+    "Found 16 products with 'div[data-component-type=\"s-search-result\"]'",
+    "  [1] ASIN=B01MTB55WH | Anker Soundcore 2 Portable Bluetooth Speaker with Stereo Sound, Bluetooth 5, Bas | $29.99 | 4.5 out of 5 stars | Reviews=4.5",
+    "  [2] ASIN=B07QK2SPP7 | JBL FLIP 5, Waterproof Portable Bluetooth Speaker, Black, Small | $79.95 | 4.8 out of 5 stars | Reviews=4.8",
+    "  [3] ASIN=B0GXSBC7SH | Gifts for Men Women, Wireless Bluetooth Speaker with Phone Holder, Desk Fans and | $35.99 | 4.0 out of 5 stars | Reviews=4.0",
+    "  [4] ASIN=B08FDPW8KR | Ortizan Portable Bluetooth Speaker (1st Gen), IPX7 Waterproof, Wireless, Big Sou | $29.98 | 4.6 out of 5 stars | Reviews=4.6",
+    "  [5] ASIN=B0DN2ZCZX6 | JBL Charge 6 - Portable Waterproof & Drop-Proof Bluetooth Speaker, Bold JBL Pro  | N/A | 4.7 out of 5 stars | Reviews=4.7",
+    "Screenshot saved to amazon_search.png",
+    "\nTesting product detail page...",
+    "Navigating to: https://www.amazon.com/dp/B08FC5ZVR7",
+    "Final URL: https://www.amazon.com/dp/B08FC5ZVR7",
+    "Screenshot saved to amazon_detail.png"
+  ]
+}

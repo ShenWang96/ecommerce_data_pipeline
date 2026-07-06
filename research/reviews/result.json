@@ -1,0 +1,22 @@
+{
+  "source": "Reviews Aggregation",
+  "status": "mixed",
+  "findings": [
+    "Testing Amazon reviews: https://www.amazon.com/product-reviews/B08FC5ZVR7",
+    "Status: 200, 128364 bytes",
+    "Page contains review content",
+    "No review blocks found (may need JS)",
+    "\nTesting Trustpilot: https://www.trustpilot.com/review/www.amazon.com",
+    "Status: 403, 991 bytes",
+    "\nTesting Google Shopping...",
+    "  Google Shopping requires complex XHR calls and is heavily JS-dependent",
+    "  Not feasible via plain HTTP — requires browser automation",
+    "  Alternative: Google Shopping API is deprecated",
+    "\n=== Review API Services ===",
+    "  Amazon Product Advertising API: 官方API，含评论摘要但非全文 [免费（需Affiliate）, value: 有限]",
+    "  Rainforest API (Amazon): 第三方，完整评论数据 [$49/mo起, value: 高]",
+    "  Trustpilot API: 官方API，获取商家评论 [免费层可用, value: 中]",
+    "  ReviewMeta: 评论分析工具，有API [免费, value: 中（非原始数据）]",
+    "  Google Places API: Google商家评价 [免费层（$200/月额度）, value: 低（仅本地商家）]"
+  ]
+}

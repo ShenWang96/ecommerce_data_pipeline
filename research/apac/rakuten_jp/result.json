@@ -1,0 +1,48 @@
+{
+  "source": "Rakuten JP",
+  "status": "ok",
+  "findings": [
+    "Navigating to: https://search.rakuten.co.jp/search/mall/bluetooth+speaker/",
+    "Page title: 【楽天市場】bluetooth speakerの通販",
+    "Found 45 search result items",
+    "Anker Soundcore 3 (Bluetooth スピーカー)【イコライザー設定 チタニウムドライバー BassUpテクノロジー PartyCast機能 IPX7 防水規格 24時間連続再生 USB-C接続】 | 6,990円送料無料63ポイント(1倍) | Rating=4.63(1,185件)",
+    "【送料無料】 bluetooth ポータブルスピーカー FUNLOGY Portable Mini 防水 ワイヤレス スピーカー 小型 TWS アウトドア IP67 お風呂 キャンプ バッテリー搭載 モバイル 高音質 iPhone Andr | 2,580円送料無料23ポイント(1倍) | Rating=4.62(4,987件)",
+    "【VGP2022受賞】bluetooth スピーカー FUNLOGY Portable 防水 スピーカー 小型 TWS ポータブルスピーカー アウトドア IP67 お風呂 キャンプ バッテリー搭載 モバイル 高音質 iPhone Andro | 4,980円送料無料45ポイント(1倍) | Rating=4.69(5,161件)",
+    "BOSE　ブルートゥーススピーカー SoundLink Flex [ 防水 / Bluetooth 対応 ] Black　SLinkFlex2ndBLK | 17,820円送料無料1,620ポイント(10%ポイントバック) | Rating=4.67(6件)",
+    "Anker Soundcore Select 4 Go bluetooth スピーカー【最大20時間再生 / 5W出力 / パッシブラジエーター搭載 / IP67防塵防水規格 / ワイヤレスステレオ対応】 | 3,990円送料無料36ポイント(1倍) | Rating=4.68(561件)",
+    "Total results: ",
+    "Screenshot: rakuten_jp_search.png"
+  ],
+  "products": [
+    {
+      "title": "Anker Soundcore 3 (Bluetooth スピーカー)【イコライザー設定 チタニウムドライバー BassUpテクノロジー PartyCast機能 IPX7 防水規格 24時間連続再生 USB-C接続】",
+      "price_jpy": "6,990円送料無料63ポイント(1倍)",
+      "url": "https://item.rakuten.co.jp/anker/a3117/",
+      "rating_reviews": "4.63(1,185件)"
+    },
+    {
+      "title": "【送料無料】 bluetooth ポータブルスピーカー FUNLOGY Portable Mini 防水 ワイヤレス スピーカー 小型 TWS アウトドア IP67 お風呂 キャンプ バッテリー搭載 モバイル 高音質 iPhone Andr",
+      "price_jpy": "2,580円送料無料23ポイント(1倍)",
+      "url": "https://item.rakuten.co.jp/entamefactory/portable_mini/",
+      "rating_reviews": "4.62(4,987件)"
+    },
+    {
+      "title": "【VGP2022受賞】bluetooth スピーカー FUNLOGY Portable 防水 スピーカー 小型 TWS ポータブルスピーカー アウトドア IP67 お風呂 キャンプ バッテリー搭載 モバイル 高音質 iPhone Andro",
+      "price_jpy": "4,980円送料無料45ポイント(1倍)",
+      "url": "https://item.rakuten.co.jp/entamefactory/funlogy_portable/",
+      "rating_reviews": "4.69(5,161件)"
+    },
+    {
+      "title": "BOSE　ブルートゥーススピーカー SoundLink Flex [ 防水 / Bluetooth 対応 ] Black　SLinkFlex2ndBLK",
+      "price_jpy": "17,820円送料無料1,620ポイント(10%ポイントバック)",
+      "url": "https://item.rakuten.co.jp/r-kojima/4969929259905/?variantId=4969929259905",
+      "rating_reviews": "4.67(6件)"
+    },
+    {
+      "title": "Anker Soundcore Select 4 Go bluetooth スピーカー【最大20時間再生 / 5W出力 / パッシブラジエーター搭載 / IP67防塵防水規格 / ワイヤレスステレオ対応】",
+      "price_jpy": "3,990円送料無料36ポイント(1倍)",
+      "url": "https://item.rakuten.co.jp/anker/a31x1/",
+      "rating_reviews": "4.68(561件)"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "source": "Amazon SG",
+  "status": "ok",
+  "findings": [
+    "Navigating to: https://www.amazon.sg/s?k=bluetooth+speaker",
+    "Page title: Amazon.sg : bluetooth speaker",
+    "Found 48 products",
+    "[B0GXH3N61Z] Marshall Emberton III Portable Bluetooth Speaker - Rugged Waterproof IP67 Design | Loud Stereo Sound | S$156.00 | 4.4 out of 5 stars",
+    "[B0CZDJ6QP9] JBL CLIP5 Bluetooth Speaker, USB C Charging, IP67 Dustproof, Waterproof, App Compatible, Carabiner S | N/A | 4.7 out of 5 stars",
+    "[B0FMHR94CG] Monster Bluetooth Speaker, Wireless Portable Outdoor Bluetooth Speakers, 60W True Wireless Stereo IP | S$80.39 | 4.6 out of 5 stars",
+    "[B0CZRLRGM5] Xiaomi Sound Pocket Speaker 5W | S$26.00 | 4.6 out of 5 stars",
+    "[B0D7ZW5GFC] Ultimate Ears WONDERBOOM 4 Portable Waterproof Bluetooth Speaker with Big Bass and 360-Degree Sound, | N/A | 4.4 out of 5 stars",
+    "Screenshot: amazon_sg_search.png"
+  ],
+  "products": [
+    {
+      "asin": "B0GXH3N61Z",
+      "title": "Marshall Emberton III Portable Bluetooth Speaker - Rugged Waterproof IP67 Design | Loud Stereo Sound",
+      "price_sgd": "S$156.00",
+      "rating": "4.4 out of 5 stars"
+    },
+    {
+      "asin": "B0CZDJ6QP9",
+      "title": "JBL CLIP5 Bluetooth Speaker, USB C Charging, IP67 Dustproof, Waterproof, App Compatible, Carabiner S",
+      "price_sgd": "N/A",
+      "rating": "4.7 out of 5 stars"
+    },
+    {
+      "asin": "B0FMHR94CG",
+      "title": "Monster Bluetooth Speaker, Wireless Portable Outdoor Bluetooth Speakers, 60W True Wireless Stereo IP",
+      "price_sgd": "S$80.39",
+      "rating": "4.6 out of 5 stars"
+    },
+    {
+      "asin": "B0CZRLRGM5",
+      "title": "Xiaomi Sound Pocket Speaker 5W",
+      "price_sgd": "S$26.00",
+      "rating": "4.6 out of 5 stars"
+    },
+    {
+      "asin": "B0D7ZW5GFC",
+      "title": "Ultimate Ears WONDERBOOM 4 Portable Waterproof Bluetooth Speaker with Big Bass and 360-Degree Sound,",
+      "price_sgd": "N/A",
+      "rating": "4.4 out of 5 stars"
+    }
+  ]
+}

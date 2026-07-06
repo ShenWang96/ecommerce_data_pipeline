@@ -1,0 +1,53 @@
+{
+  "source": "Amazon AU",
+  "status": "ok",
+  "findings": [
+    "Navigating to: https://www.amazon.com.au/s?k=bluetooth+speaker",
+    "Final URL: https://www.amazon.com.au/s?k=bluetooth+speaker",
+    "Page title: Amazon.com.au : bluetooth speaker",
+    "Found 48 products",
+    "[B0CZRP1KFG] Xiaomi Sound Outdoor 30 W, Portable Bluetooth Speaker Sound True Wireless Stereo Bluetooth 5.4 IP70  | AU$48.16 | 4.7 out of 5 stars | Reviews=N/A",
+    "[B0DYN9FVPR] Ultimate Ears Boom 4 Portable Waterproof Bluetooth Speaker with 360-Degree, Bold, Immersive, Crystal | N/A | 4.9 out of 5 stars | Reviews=N/A",
+    "[B0DYNKF4S2] Ultimate Ears WONDERBOOM 4 Portable Waterproof Bluetooth Speaker with Big Bass and 360-Degree Sound, | N/A | 4.7 out of 5 stars | Reviews=N/A",
+    "[B0CZRMRQ3Y] Xiaomi Sound Outdoor 30 W, Portable Bluetooth Speaker Sound True Wireless Stereo Bluetooth 5.4 IP70  | AU$46.38 | 4.7 out of 5 stars | Reviews=N/A",
+    "[B0FKC2TN6C] Xiaomi Sound Party NS7,Portable Speaker with 26H Play, 15W Power Bank & TWS Stereo, Professionally T | AU$99.38 | 4.6 out of 5 stars | Reviews=N/A",
+    "Screenshot: amazon_au_search.png"
+  ],
+  "products": [
+    {
+      "asin": "B0CZRP1KFG",
+      "title": "Xiaomi Sound Outdoor 30 W, Portable Bluetooth Speaker Sound True Wireless Stereo Bluetooth 5.4 IP70 ",
+      "price_aud": "AU$48.16",
+      "rating": "4.7 out of 5 stars",
+      "reviews": "N/A"
+    },
+    {
+      "asin": "B0DYN9FVPR",
+      "title": "Ultimate Ears Boom 4 Portable Waterproof Bluetooth Speaker with 360-Degree, Bold, Immersive, Crystal",
+      "price_aud": "N/A",
+      "rating": "4.9 out of 5 stars",
+      "reviews": "N/A"
+    },
+    {
+      "asin": "B0DYNKF4S2",
+      "title": "Ultimate Ears WONDERBOOM 4 Portable Waterproof Bluetooth Speaker with Big Bass and 360-Degree Sound,",
+      "price_aud": "N/A",
+      "rating": "4.7 out of 5 stars",
+      "reviews": "N/A"
+    },
+    {
+      "asin": "B0CZRMRQ3Y",
+      "title": "Xiaomi Sound Outdoor 30 W, Portable Bluetooth Speaker Sound True Wireless Stereo Bluetooth 5.4 IP70 ",
+      "price_aud": "AU$46.38",
+      "rating": "4.7 out of 5 stars",
+      "reviews": "N/A"
+    },
+    {
+      "asin": "B0FKC2TN6C",
+      "title": "Xiaomi Sound Party NS7,Portable Speaker with 26H Play, 15W Power Bank & TWS Stereo, Professionally T",
+      "price_aud": "AU$99.38",
+      "rating": "4.6 out of 5 stars",
+      "reviews": "N/A"
+    }
+  ]
+}

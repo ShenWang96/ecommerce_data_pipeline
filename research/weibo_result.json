@@ -1,0 +1,11 @@
+{
+  "source": "微博",
+  "findings": [
+    "  HTTP 200 (10622 bytes)",
+    "  非 JSON: <!DOCTYPE html>\n<html>\n<head>\n    <meta http-equiv=\"Content-type\" content=\"text/html; charset=utf-8\"/>\n    <title>Sina Visitor System</title>\n</head>\n<body>\n<span id=\"message\"></span>\n<script type=\"text/javascript\" src=\"/js/visitor/mini_original.js?v=20161116\"></script>\n<script src=\"https://passport"
+  ],
+  "topics": [],
+  "strategies": {
+    "mobile_api": false
+  }
+}

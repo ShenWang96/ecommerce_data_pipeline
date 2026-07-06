@@ -1,0 +1,23 @@
+{
+  "source": "TikTok",
+  "status": "needs_browser",
+  "findings": [
+    "Testing TikTokApi library...",
+    "TikTokApi not installed — would need: pip install TikTokApi",
+    "Testing TikTok trending page...",
+    "Trending page: 200, 363152 bytes",
+    "Captcha on trending page",
+    "Testing TikTok search page...",
+    "Search page: 200, 350740 bytes",
+    "Got substantial content",
+    "Title: TikTok - Make Your Day",
+    "Testing TikTok hashtag page...",
+    "Hashtag page: 200, 349183 bytes",
+    "Testing alternative: tiktok-scraper approach...",
+    "  Note: Most unofficial TikTok APIs either:",
+    "    a) Require ms_token from TikTok mobile app (hard to get)",
+    "    b) Are paid services (RapidAPI ~$30-100/mo)",
+    "    c) Use TikTok's internal API but get blocked quickly",
+    "  Recommendation: TikTokApi + Playwright = most viable free approach"
+  ]
+}

@@ -1,0 +1,120 @@
+# E-commerce Product Selection Pipeline — Configuration
+# 
+# 按 [Region + Category] 两维度驱动数据采集
+# 切换 region 会自动选择对应的 Amazon 站点和本土电商源
+
+# ── 核心配置 ──
+region: asia_pacific          # asia_pacific | north_america | europe | custom
+
+categories:
+  - bluetooth speaker
+  - wireless earbuds
+  - smart watch
+  - portable charger
+  # 可通过命令行 --keywords 覆盖
+
+# ── 数据源开关 ──
+sources:
+  google_trends:
+    enabled: true
+
+  trustpilot:
+    enabled: true
+    domains:
+      - amazon.com
+      - amazon.co.jp
+
+  amazon:
+    enabled: true
+    max_pages: 3               # 每个站点最多翻页数
+    headless: true
+
+  rakuten:
+    enabled: true              # 仅日本
+    max_pages: 3
+
+  # 以下源暂不可用
+  shopee:
+    enabled: false
+  lazada:
+    enabled: false
+  taobao:
+    enabled: false
+
+# ── Region → Amazon 站点映射 ──
+regions:
+  asia_pacific:
+    label: "Asia Pacific"
+    amazon_markets: [au, jp, sg, in]
+    local_sources: [rakuten]
+
+  north_america:
+    label: "North America"
+    amazon_markets: [us, ca, mx]
+    local_sources: []
+
+  europe:
+    label: "Europe"
+    amazon_markets: [de, fr, es, it, uk]
+    local_sources: []
+
+  china:
+    label: "China (blocked)"
+    amazon_markets: []           # Amazon 不在中国运营
+    local_sources: []             # Taobao/JD/1688 不可用
+
+# ── Amazon 站点 URL 模板 ──
+amazon_markets:
+  us:
+    domain: amazon.com
+    currency: USD
+    search_url: "https://www.amazon.com/s?k={query}"
+  au:
+    domain: amazon.com.au
+    currency: AUD
+    search_url: "https://www.amazon.com.au/s?k={query}"
+  jp:
+    domain: amazon.co.jp
+    currency: JPY
+    search_url: "https://www.amazon.co.jp/s?k={query}"
+  sg:
+    domain: amazon.sg
+    currency: SGD
+    search_url: "https://www.amazon.sg/s?k={query}"
+  in:
+    domain: amazon.in
+    currency: INR
+    search_url: "https://www.amazon.in/s?k={query}"
+  de:
+    domain: amazon.de
+    currency: EUR
+    search_url: "https://www.amazon.de/s?k={query}"
+  fr:
+    domain: amazon.fr
+    currency: EUR
+    search_url: "https://www.amazon.fr/s?k={query}"
+  uk:
+    domain: amazon.co.uk
+    currency: GBP
+    search_url: "https://www.amazon.co.uk/s?k={query}"
+  ca:
+    domain: amazon.ca
+    currency: CAD
+    search_url: "https://www.amazon.ca/s?k={query}"
+  mx:
+    domain: amazon.com.mx
+    currency: MXN
+    search_url: "https://www.amazon.com.mx/s?k={query}"
+
+# ── Playwright 设置 ──
+playwright:
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+  viewport: {width: 1920, height: 1080}
+  timeout: 30000
+  wait_after_load: 5000
+  library_path: "$HOME/.local/playwright-libs"   # no-sudo Playwright 依赖路径
+
+# ── 输出 ──
+output:
+  dir: data
+  format: jsonl                    # jsonl | csv | parquet
