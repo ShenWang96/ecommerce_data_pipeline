@@ -114,14 +114,17 @@ class ZhihuRawCollector:
                 if not title: continue
                 qid = str(target.get("id", ""))
                 metrics_text = target.get("metrics_area", {}).get("text", "")
+                excerpt = target.get("excerpt", "").strip()
+                # excerpt 是问题的详细描述，作为 body 的主要内容
+                # metrics_text (如 "76 回答 · 5 关注") 放入 extra
                 records.append(make_raw(
                     source="zhihu",
                     record_type="question",
                     item_id=qid,
                     url=f"https://www.zhihu.com/question/{qid}" if qid else "",
                     title=title,
-                    body=metrics_text,
-                    extra={"metrics_text": metrics_text},
+                    body=excerpt or metrics_text,
+                    extra={"metrics_text": metrics_text, "excerpt": excerpt},
                     api_response=target,
                 ))
         except Exception as e:
@@ -129,7 +132,10 @@ class ZhihuRawCollector:
         return records
 
     def collect_all(self) -> list[RawRecord]:
-        records = self.collect_hot_list()
+        # 有 Cookie 时优先走 API 路径（数据更全：含 excerpt 问题详情）
         if self.cookies:
-            records.extend(self.collect_hot_api())
-        return records
+            api_records = self.collect_hot_api()
+            if api_records:
+                return api_records
+        # 无 Cookie 或 API 失败时回退到 HTML 解析
+        return self.collect_hot_list()
