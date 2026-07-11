@@ -114,14 +114,17 @@ class ZhihuRawCollector:
                 if not title: continue
                 qid = str(target.get("id", ""))
                 metrics_text = target.get("metrics_area", {}).get("text", "")
+                excerpt = target.get("excerpt", "").strip()
+                # excerpt 是问题的详细描述，作为 body 的主要内容
+                # metrics_text (如 "76 回答 · 5 关注") 放入 extra
                 records.append(make_raw(
                     source="zhihu",
                     record_type="question",
                     item_id=qid,
                     url=f"https://www.zhihu.com/question/{qid}" if qid else "",
                     title=title,
-                    body=metrics_text,
-                    extra={"metrics_text": metrics_text},
+                    body=excerpt or metrics_text,
+                    extra={"metrics_text": metrics_text, "excerpt": excerpt},
                     api_response=target,
                 ))
         except Exception as e:
