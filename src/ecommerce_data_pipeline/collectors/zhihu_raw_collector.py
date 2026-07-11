@@ -132,7 +132,10 @@ class ZhihuRawCollector:
         return records
 
     def collect_all(self) -> list[RawRecord]:
-        records = self.collect_hot_list()
+        # 有 Cookie 时优先走 API 路径（数据更全：含 excerpt 问题详情）
         if self.cookies:
-            records.extend(self.collect_hot_api())
-        return records
+            api_records = self.collect_hot_api()
+            if api_records:
+                return api_records
+        # 无 Cookie 或 API 失败时回退到 HTML 解析
+        return self.collect_hot_list()
