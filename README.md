@@ -132,3 +132,30 @@ python3 scripts/generate_report.py data/raw/all_*.jsonl
 - [ ] Cookie 自动刷新机制
 - [ ] Agent 评分引擎
 - [ ] 闭环验证系统
+
+## 扫码登录 (2026-07-11 新增)
+
+Headless 模式扫码登录脚本，支持 知乎/微博/小红书：
+
+```bash
+# 后台启动 + 截图二维码 + 轮询等待登录
+LD_LIBRARY_PATH="$HOME/.local/playwright-libs" python3 scripts/qr_login.py zhihu
+LD_LIBRARY_PATH="$HOME/.local/playwright-libs" python3 scripts/qr_login.py weibo
+LD_LIBRARY_PATH="$HOME/.local/playwright-libs" python3 scripts/qr_login.py xiaohongshu
+```
+
+登录成功后 Cookie 自动保存到 `~/.local/china_cookies/{site}.json`，采集器自动加载。
+
+## Stage 1 落地数据样例
+
+最新一版采集数据在 `data/raw/` 目录下，包含四源合并的 JSONL：
+
+```bash
+# 加载验证
+python3 -c "
+import json
+for line in open([f for f in __import__('glob').glob('data/raw/all_*.jsonl')][-1]):
+    r = json.loads(line)
+    print(f'{r[\"source\"]:12s} [{r[\"record_type\"]:8s}] {r[\"title\"][:50]}')
+"
+```

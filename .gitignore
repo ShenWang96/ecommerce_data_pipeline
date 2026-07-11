@@ -8,7 +8,14 @@ __pycache__/
 *.swp
 *.swo
 .DS_Store
-data/
+data/raw/*.jsonl
+
+# 保留最新一版落地数据用于验收
+!data/raw/all_*.jsonl
+!data/raw/bilibili_*.jsonl
+!data/raw/zhihu_*.jsonl
+!data/raw/weibo_*.jsonl
+!data/raw/xiaohongshu_*.jsonl
 .env
 *.egg-info/
 dist/
