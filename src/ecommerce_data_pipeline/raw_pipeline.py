@@ -26,6 +26,10 @@ from .collectors.bilibili_raw_collector import BilibiliRawCollector
 from .collectors.zhihu_raw_collector import ZhihuRawCollector
 from .collectors.weibo_raw_collector import WeiboRawCollector
 from .collectors.xiaohongshu_raw_collector import XiaohongshuRawCollector
+from .collectors.toutiao_raw_collector import ToutiaoRawCollector
+from .collectors.baidu_raw_collector import BaiduRawCollector
+from .collectors.wechat_raw_collector import WechatRawCollector
+from .collectors.hupu_raw_collector import HupuRawCollector
 from .models.raw_record import RawRecord
 
 
@@ -42,7 +46,7 @@ class RawPipeline:
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
 
         # B站 (无需登录，httpx API)
-        print("[1/4] B站 原始数据采集...")
+        print("[1/8] B站 原始数据采集...")
         try:
             with BilibiliRawCollector() as b:
                 records = b.collect_all()
@@ -53,7 +57,7 @@ class RawPipeline:
             print(f"  ✗ B站 error: {e}")
 
         # 知乎 (部分无登录 + Cookie 热榜)
-        print("[2/4] 知乎 原始数据采集...")
+        print("[2/8] 知乎 原始数据采集...")
         try:
             z = ZhihuRawCollector()
             records = z.collect_all()
@@ -64,7 +68,7 @@ class RawPipeline:
             print(f"  ✗ 知乎 error: {e}")
 
         # 微博 (需 Cookie)
-        print("[3/4] 微博 原始数据采集...")
+        print("[3/8] 微博 原始数据采集...")
         if WeiboRawCollector.check_ready():
             try:
                 w = WeiboRawCollector()
@@ -78,7 +82,7 @@ class RawPipeline:
             print("  ⚠ 微博跳过 — 未配置 Cookie")
 
         # 小红书 (需 Cookie + Playwright) — 发现页热榜 + 热搜关键词
-        print("[4/4] 小红书 原始数据采集...")
+        print("[4/8] 小红书 原始数据采集...")
         if XiaohongshuRawCollector.check_ready():
             try:
                 x = XiaohongshuRawCollector()
@@ -90,6 +94,57 @@ class RawPipeline:
                 print(f"  ✗ 小红书 error: {e}")
         else:
             print("  ⚠ 小红书跳过 — 未配置 Cookie")
+
+        # 虎扑步行街 (需 Cookie + Playwright) — 热帖
+        print("[5/8] 虎扑步行街 原始数据采集...")
+        if HupuRawCollector.check_ready():
+            try:
+                hu = HupuRawCollector()
+                records = hu.collect_all()
+                all_records.extend(records)
+                self._save(records, f"hupu_{timestamp}.jsonl")
+                self._summary(records, "虎扑")
+            except Exception as e:
+                print(f"  ✗ 虎扑 error: {e}")
+        else:
+            print("  ⚠ 虎扑跳过 — 未配置 Cookie (先运行 python3 scripts/qr_login.py hupu)")
+
+        # 今日头条 (无需登录，httpx API)
+        print("[6/8] 今日头条 原始数据采集...")
+        try:
+            t = ToutiaoRawCollector()
+            records = t.collect_all()
+            all_records.extend(records)
+            self._save(records, f"toutiao_{timestamp}.jsonl")
+            self._summary(records, "今日头条")
+        except Exception as e:
+            print(f"  ✗ 今日头条 error: {e}")
+
+        # 百度热榜 (无需登录，httpx API)
+        print("[7/8] 百度热榜 原始数据采集...")
+        try:
+            bd = BaiduRawCollector()
+            records = bd.collect_all()
+            all_records.extend(records)
+            self._save(records, f"baidu_{timestamp}.jsonl")
+            self._summary(records, "百度热榜")
+        except Exception as e:
+            print(f"  ✗ 百度热榜 error: {e}")
+
+        # 36氪 + 华尔街见闻 结构类媒体 (RSS + API)
+        print("[8/8] 结构类媒体 原始数据采集...")
+        try:
+            wx = WechatRawCollector()
+            records_36kr = wx.collect_36kr()
+            records_ws = wx.collect_wallstreetcn()
+            all_records.extend(records_36kr)
+            all_records.extend(records_ws)
+            self._save(records_36kr, f"36kr_{timestamp}.jsonl")
+            self._save(records_ws, f"wallstreetcn_{timestamp}.jsonl")
+            print(f"  ✓ 36氪: {len(records_36kr)} 条")
+            print(f"  ✓ 华尔街见闻: {len(records_ws)} 条")
+        except Exception as e:
+            print(f"  ✗ 结构媒体 error: {e}")
 
         return all_records
 

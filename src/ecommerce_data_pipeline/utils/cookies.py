@@ -24,6 +24,7 @@ DOMAIN_MAP = {
     "xiaohongshu": ".xiaohongshu.com",
     "xhs": ".xiaohongshu.com",
     "weibo": ".weibo.com",
+    "hupu": ".hupu.com",
     "taobao": ".taobao.com",
     "jd": ".jd.com",
     "1688": ".1688.com",
@@ -162,6 +163,7 @@ def check_valid(site: str) -> dict:
         "xiaohongshu": ["a1", "web_session", "websectiga", "acw_tc", "webId"],
         "weibo": ["SUB", "SUBP", "login_sid_t"],
         "zhihu": ["z_c0", "d_c0", "zst_82"],
+        "hupu": ["u", "passport_csrf_token"],
     }
     expected = key_map.get(site, [])
     found = [n for n in expected if n in names]

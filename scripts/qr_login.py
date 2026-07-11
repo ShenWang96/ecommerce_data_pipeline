@@ -49,10 +49,20 @@ PLATFORMS = {
         "verify_url": "https://www.xiaohongshu.com/explore",
         "qr_selector": "#qr-container, .qr-container, canvas, [class*='qr'], [class*='login']",
         "profile_dir": "~/.local/xhs-stealth-profile",
-        "check_logged_in": lambda url: True,  # 小红书登录后不一定跳转，用其他方式检测
+        "check_logged_in": lambda url: True,
         "verify_text": ["笔记", "发现"],
         "cookie_file": "xiaohongshu.json",
         "key_cookies": ["a1", "web_session", "webId"],
+    },
+    "hupu": {
+        "login_url": "https://passport.hupu.com/login",
+        "verify_url": "https://bbs.hupu.com/all-gambia",
+        "qr_selector": "canvas, .qrcode, img[src*='qrcode'], [class*='qr'], [class*='scan']",
+        "profile_dir": "~/.local/hupu-stealth-profile",
+        "check_logged_in": lambda url: "passport" not in url and "hupu.com" in url,
+        "verify_text": ["步行街", "热帖", "帖子"],
+        "cookie_file": "hupu.json",
+        "key_cookies": ["u", "passport_csrf_token"],
     },
 }
 

@@ -16,6 +16,18 @@ data/raw/*.jsonl
 !data/raw/zhihu_*.jsonl
 !data/raw/weibo_*.jsonl
 !data/raw/xiaohongshu_*.jsonl
+!data/raw/toutiao_*.jsonl
+!data/raw/baidu_*.jsonl
+!data/raw/36kr_*.jsonl
+!data/raw/wallstreetcn_*.jsonl
+!data/raw/hupu_*.jsonl
+
+# 生成文件
+data_report.html
+data/*_signals.jsonl
+data/*_signals*.*
+data/signals_*
+data/report_*
 .env
 *.egg-info/
 dist/
