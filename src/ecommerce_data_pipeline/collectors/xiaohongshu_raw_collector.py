@@ -301,115 +301,35 @@ class XiaohongshuRawCollector:
         return records
 
     def collect_trending_searches(self, limit: int = 30, explore_records: list[RawRecord] | None = None) -> list[RawRecord]:
-        """热搜关键词 — "猜你想搜" / trending searches.
+        """热搜关键词 — 从推荐流笔记中提取热点关键词。
         
-        策略:
-          1. 尝试点击搜索区域触发 suggestion 面板 (需登录态)
-          2. 如登录态不可用，从 explore 笔记标题中提取高频关键词作为 fallback
+        小红书 Web 端搜索功能需要完整登录态，且无公开热搜 API。
+        采用推荐流笔记标题 + api_response 中的 tag_list 双通道提取：
+          1. 提取 api_response.tag_list 中的官方话题标签
+          2. 用 jieba TF-IDF 从标题中提取关键词
+          3. 用 n-gram 频率补充 jieba 可能遗漏的组合词
         
         Args:
             limit: 最多返回条数
-            explore_records: explore 采集的笔记记录（用于 fallback 关键词提取）
+            explore_records: explore 采集的笔记记录
         """
-        records = []
-        p, ctx = self._new_browser_and_context()
-        page = ctx.new_page()
-        try:
-            page.goto("https://www.xiaohongshu.com/explore",
-                      wait_until="domcontentloaded", timeout=self.timeout)
-            page.wait_for_timeout(3000)
-
-            # 检测登录态：搜索框 placeholder 是否为 "登录探索更多内容"
-            ph = page.evaluate("document.getElementById('search-input')?.placeholder || ''")
-            is_guest = "登录" in ph
-            has_login_modal = page.query_selector('.login-modal, [class*=login-container]') is not None
-
-            if is_guest or has_login_modal:
-                logger.info(f"trending_search: XHS treats session as guest (placeholder='{ph}'), skipping web UI search")
-                page.close(); ctx.close(); p.stop()
-                # fallback: 从 explore 笔记提取关键词
-                return self._extract_keywords_from_notes(explore_records or [], limit)
-
-            # 已登录: 尝试点击搜索区域触发 suggestion 面板
-            clicked = False
-            for selector in ['#search-input', '.search-area', '[class*=search-area]',
-                             '.wendian-wrapper', '[class*=wendian]', 'textarea']:
-                el = page.query_selector(selector)
-                if el:
-                    try:
-                        el.click(force=True, timeout=5000)
-                        clicked = True
-                        break
-                    except Exception:
-                        continue
-            if not clicked:
-                logger.info("trending_search: could not trigger search area")
-                page.close(); ctx.close(); p.stop()
-                return self._extract_keywords_from_notes(explore_records or [], limit)
-
-            page.wait_for_timeout(3000)
-
-            soup = BeautifulSoup(page.content(), "lxml")
-            items = soup.select('.suggestion-item, [class*=suggestion] [class*=item]')
-            if not items:
-                section = soup.select_one('[class*=suggestion-section], [class*=suggest]')
-                if section:
-                    items = section.find_all(['div', 'span'])
-
-            seen_terms = set()
-            for el in items[:limit]:
-                content_el = el.select_one('[class*=content]') or el.select_one('[class*=desc]')
-                term = content_el.get_text(strip=True) if content_el else el.get_text(strip=True)
-
-                if not term or len(term) < 2 or len(term) > 30:
-                    continue
-                if term in seen_terms or term == "猜你想搜":
-                    continue
-                if term.isdigit() or all(c in '0123456789., #' for c in term):
-                    continue
-                seen_terms.add(term)
-
-                records.append(make_raw(
-                    source="xiaohongshu",
-                    record_type="topic",
-                    item_id=f"trending_search_{hash(term) & 0x7FFFFFFF}",
-                    url=f"https://www.xiaohongshu.com/search_result?keyword={term}",
-                    title=term,
-                    html_snapshot="",
-                    extra={
-                        "source_tab": "trending_search",
-                        "rank": len(records),
-                        "collected_via": "web_suggestion",
-                    },
-                ))
-            
-            logger.info(f"trending_search: {len(records)} keywords via web suggestion")
-        except Exception as e:
-            logger.warning(f"trending_search error: {e}")
-        finally:
-            try:
-                page.close(); ctx.close(); p.stop()
-            except Exception:
-                pass
-
-        # 如果 web suggestion 没拿到，用 fallback
-        if not records and explore_records:
-            records = self._extract_keywords_from_notes(explore_records, limit)
-
-        return records
+        if not explore_records:
+            logger.info("trending_search: no explore records to extract from")
+            return []
+        return self._extract_keywords_from_notes(explore_records, limit)
 
     def _extract_keywords_from_notes(self, notes: list[RawRecord], limit: int = 20) -> list[RawRecord]:
-        """从笔记标题中提取高频关键词作为热搜 fallback。
+        """从推荐流笔记中提取热点关键词。
         
-        使用 n-gram 频率分析，提取出现≥2次的 2-5 字词组。
-        同时保留所有标题中的完整话题标记（#xxx#）。
+        三通道提取：
+          1. api_response.tag_list 中的官方话题标签（权重最高）
+          2. 标题中的 #话题# 标记（权重高）
+          3. jieba TF-IDF 从标题中提取关键词（覆盖无标记的内容）
         """
         import re
         from collections import Counter
 
-        titles = [r.title for r in notes if r.title]
-        if not titles:
-            logger.info("keyword_fallback: no titles to extract from")
+        if not notes:
             return []
 
         try:
@@ -418,41 +338,49 @@ class XiaohongshuRawCollector:
             use_jieba = True
         except ImportError:
             use_jieba = False
-            logger.info("keyword_fallback: jieba not available, using n-gram fallback")
+            logger.info("keyword_extraction: jieba not available, using n-gram only")
 
         word_freq = Counter()
-        for title in titles:
-            # 1. 提取话题标记 #xxx#
-            for tag in re.findall(r'#([^#]+)#', title):
-                word_freq[tag.strip()] += 3  # 话题标记加权
-            if use_jieba:
-                # jieba 分词
-                words = jieba.cut(title)
-                for w in words:
-                    w = w.strip()
-                    if len(w) >= 2 and not w.isdigit():
-                        word_freq[w] += 1
-            else:
-                # n-gram 回退
-                cn = re.findall(r'[\u4e00-\u9fa5]+', title)
-                for seg in cn:
-                    for n in range(2, min(len(seg) + 1, 6)):
-                        for i in range(len(seg) - n + 1):
-                            word_freq[seg[i:i+n]] += 1
-            # 英文词
-            for w in re.findall(r'[A-Za-z]{3,}', title):
-                word_freq[w.lower()] += 1
+        word_sources = {}  # 记录关键词来源: tag / hashtag / tfidf
+
+        for note in notes:
+            title = note.title or ""
+
+            # 通道1: api_response.tag_list（官方话题标签，权重 x5）
+            api = note.api_response or {}
+            if isinstance(api, dict):
+                for tag in api.get("tag_list", []):
+                    name = tag.get("name", "") if isinstance(tag, dict) else str(tag)
+                    if name and len(name) >= 2:
+                        word_freq[name] += 5
+                        word_sources[name] = "tag"
+
+            # 通道2: 标题中的 #话题# 标记（权重 x3）
+            for tag in re.findall(r'#([^#]{2,20})#', title):
+                tag = tag.strip()
+                if tag:
+                    word_freq[tag] += 3
+                    word_sources[tag] = "hashtag"
+
+            # 通道3: jieba TF-IDF（从标题提取关键词，权重 x1）
+            if use_jieba and title:
+                tags = jieba.analyse.extract_tags(title, topK=5, withWeight=True)
+                for word, weight in tags:
+                    if len(word) >= 2 and not word.isdigit():
+                        word_freq[word] += round(weight)
+                        if word not in word_sources:
+                            word_sources[word] = "tfidf"
 
         stopwords = {'的', '了', '是', '在', '我', '有', '和', '就', '不', '人', '都', '一个',
                      '什么', '怎么', '可以', '这个', '那个', '真的', '不是', '没有', '觉得',
                      '应该', '还是', '其实', '比较', '已经', '如果', '这是', '看看', '大家',
-                     '你们', '我们', '他们', '真的', '太香', '一个', '不知道', '怎么办',
-                     '给你们', '的时候', '的时候', '出来', '真是', '看到', '一定要',
-                     '分享', '推荐', '真的', '可以', '这个', '那个', '我们的', '他们的'}
+                     '你们', '我们', '他们', '太香', '不知道', '怎么办',
+                     '给你们', '的时候', '出来', '真是', '看到', '一定要',
+                     '分享', '推荐', '卧槽'}
         hot_words = [(w, c) for w, c in word_freq.most_common(limit * 5)
-                     if c >= 2 and w not in stopwords and len(w) >= 2 and len(w) <= 15]
+                     if c >= 1 and w not in stopwords and len(w) >= 2 and len(w) <= 20]
 
-        # 去重: 如果短词是长词的子串，且频率相同，则去掉短词
+        # 去重: 短词是长词的子串且频率相同时去掉短词
         filtered = []
         for w, c in hot_words:
             is_substr = any(w != w2 and w in w2 and c2 >= c for w2, c2 in hot_words)
@@ -462,23 +390,28 @@ class XiaohongshuRawCollector:
 
         records = []
         for rank, (word, count) in enumerate(hot_words):
+            source_type = word_sources.get(word, "unknown")
             records.append(make_raw(
                 source="xiaohongshu",
                 record_type="topic",
-                item_id=f"keyword_{hash(word) & 0x7FFFFFFF}",
+                item_id=f"keyword_{abs(hash(word)) % 100000000}",
                 url=f"https://www.xiaohongshu.com/search_result?keyword={word}",
                 title=word,
-                body=f"在推荐流中出现 {count} 次",
+                body=f"在推荐流中权重 {count}（来源: {source_type}）",
                 html_snapshot="",
                 extra={
-                    "source_tab": "keyword_fallback",
+                    "source_tab": "trending_search",
                     "rank": rank,
-                    "frequency": count,
+                    "weight": count,
+                    "keyword_source": source_type,
                     "collected_via": "keyword_extraction",
                 },
             ))
 
-        logger.info(f"keyword_fallback: extracted {len(records)} keywords from {len(titles)} note titles")
+        logger.info(f"keyword_extraction: {len(records)} keywords from {len(notes)} notes "
+                    f"(tag:{sum(1 for r in records if r.extra.get('keyword_source')=='tag')}, "
+                    f"hashtag:{sum(1 for r in records if r.extra.get('keyword_source')=='hashtag')}, "
+                    f"tfidf:{sum(1 for r in records if r.extra.get('keyword_source')=='tfidf')})")
         return records
 
     def collect_all(self, keywords: list[str] | None = None) -> list[RawRecord]:
